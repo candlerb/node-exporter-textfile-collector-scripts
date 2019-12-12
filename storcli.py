@@ -109,7 +109,12 @@ def handle_megaraid_controller(response):
                int('hrs' in response['Scheduled Tasks']['Patrol Read Reoccurrence']))
     if 'Cachevault_Info' in response:
         for cvidx, cvinfo in enumerate(response['Cachevault_Info']):
-            add_metric('cv_temperature', baselabel + ',cvidx="' + str(cvidx) + '"', int(cvinfo['Temp'].replace('C','')))
+            if 'Temp' in cvinfo:
+                add_metric('cv_temperature', baselabel + ',cvidx="' + str(cvidx) + '"', int(cvinfo['Temp'].replace('C','')))
+    if 'BBU_Info' in response:
+        for bbuidx, bbuinfo in enumerate(response['BBU_Info']):
+            if 'Temp' in bbuinfo:
+                add_metric('bbu_temperature', baselabel + ',bbuidx="' + str(bbuidx) + '"', int(bbuinfo['Temp'].replace('C','')))
 
     time_difference_seconds = -1
     system_time = datetime.strptime(response['Basics'].get('Current System Date/time'),
