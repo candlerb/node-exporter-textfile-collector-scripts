@@ -58,7 +58,8 @@ while read col metric help; do
   echo "# HELP ${DATASET}_${metric} ${help}"
   echo "# TYPE ${DATASET}_${metric} gauge"
   while read -r -a line; do
-    echo "${DATASET}_${metric}{${DATASET_NAME}=\"${line[0]}\"} ${line[$col]/%-/0}"
+    # change "-" to "0", and "1.43x" to "1.430"
+    echo "${DATASET}_${metric}{${DATASET_NAME}=\"${line[0]}\"} ${line[$col]/%[x-]/0}"
   done <<<"$dataset_info"
 done <<<$'1\tused_bytes\tThe amount of space consumed by this dataset and all its descendents
 2\tavailable_bytes\tThe amount of space available to the dataset and all its children
