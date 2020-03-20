@@ -30,6 +30,7 @@ done
 ### zpool metrics ###
 
 zpool_info="$(zpool list -Hp -o name,size,free,freeing,dedupratio,fragmentation 2>/dev/null)" &&
+[ -n "$zpool_info" ] &&
 while read col metric help; do
   echo "# HELP ${ZPOOL}_${metric} ${help}"
   echo "# TYPE ${ZPOOL}_${metric} gauge"
@@ -53,7 +54,8 @@ done
 
 ### dataset metrics ###
 
-dataset_info="$(zfs list -Hp -t $DATASET_TYPES -o name,used,available,referenced,compressratio,reservation,refreservation,volsize)"
+dataset_info="$(zfs list -Hp -t $DATASET_TYPES -o name,used,available,referenced,compressratio,reservation,refreservation,volsize)" &&
+[ -n "$dataset_info" ] &&
 while read col metric help; do
   echo "# HELP ${DATASET}_${metric} ${help}"
   echo "# TYPE ${DATASET}_${metric} gauge"
